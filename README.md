@@ -134,6 +134,56 @@ python test_sqlite_vs_hash.py
 
 - La tabla hash mantiene un rendimiento constante incluso con un millón de registros.
 
+### C++
+
+La implementación en C++ utiliza una simulación de base de datos en memoria (`SimulatedDatabase`) en lugar de una conexión real a SQLite. Este enfoque permite ejecutar la prueba de concepto sin dependencias externas.
+
+#### Comentarios sobre el Código
+
+1. **SimulatedDatabase:**
+   - Simula una base de datos en memoria utilizando un `std::unordered_set` para almacenar tokens.
+   - Métodos principales:
+     - `insert`: Inserta un token en la base de datos simulada.
+     - `exists`: Verifica si un token existe en la base de datos.
+     - `clear`: Limpia todos los registros.
+     - `getAllTokens`: Retorna todos los tokens almacenados.
+
+2. **generateRandomToken:**
+   - Genera un token aleatorio de longitud fija utilizando caracteres alfanuméricos.
+   - Emplea `std::random_device` y `std::mt19937` para garantizar aleatoriedad.
+
+3. **populateDatabase:**
+   - Llena la base de datos simulada con un número definido de tokens aleatorios.
+   - Garantiza una base limpia antes de cada prueba al usar `clear`.
+
+4. **loadHashTable:**
+   - Carga todos los tokens de la base de datos simulada a una tabla hash (`std::unordered_set`).
+   - Permite consultas rápidas en memoria.
+
+5. **queryHashTable:**
+   - Consulta la tabla hash para verificar si un token existe.
+   - Mide el tiempo necesario utilizando `std::chrono`.
+
+6. **queryDatabase:**
+   - Consulta la base de datos simulada para verificar si un token existe.
+   - También mide el tiempo necesario con `std::chrono`.
+
+7. **performanceTest:**
+   - Realiza consultas aleatorias tanto en la base de datos simulada como en la tabla hash.
+   - Calcula los tiempos promedio para cada estructura.
+
+8. **main:**
+   - Controla el flujo principal de la prueba:
+     1. Llena la base de datos simulada con un millón de registros.
+     2. Carga los tokens en la tabla hash.
+     3. Ejecuta las pruebas de rendimiento y muestra los resultados.
+
+#### Ejecución
+
+Puede probar este código en entornos online como [https://onlinegdb.com/JUg0Yf8iH]. Simplemente ingrese al link anterior.
+
+
+
 ---
 
 ## Conclusión
